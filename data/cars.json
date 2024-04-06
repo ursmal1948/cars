@@ -1,0 +1,37 @@
+{
+  "cars": [
+    {
+      "model": "AUDI",
+      "price": 9000,
+      "color": "SILVER",
+      "mileage": 1500,
+      "components": [
+        "SALLOY WHEELS",
+        "EVASIVE STEERING"
+      ]
+    },
+    {
+      "model": "MAZDA",
+      "price": 3000,
+      "color": "WHITE",
+      "mileage": 2500,
+      "components": [
+        "BLUETOOTH",
+        "AIR CONDITIONING",
+        "WABS",
+        "SALLOY WHEELS"
+      ]
+    },
+    {
+      "model": "BMW",
+      "price": 300,
+      "color": "WHITE",
+      "mileage": 2800,
+      "components": [
+        "AIR",
+        "KEYLESS ENTRY",
+        "BACKUP CAMERA"
+      ]
+    }
+  ]
+}

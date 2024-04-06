@@ -1,0 +1,24 @@
+{
+  "cars": [
+    {
+      "model": "AUDI",
+      "price": 9000,
+      "color": "SILVER",
+      "mileage": 1500,
+      "components": [
+        "SALLOY WHEELS",
+        "EVASIVE STEERING"
+      ]
+    },
+    {
+      "model": "BMW",
+      "price": 300,
+      "color": "WHITE",
+      "mileage": 2800,
+      "components": [
+        "AIR",
+        "KEYLESS ENTRY"
+      ]
+    }
+  ]
+}
