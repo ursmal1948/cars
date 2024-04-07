@@ -6,8 +6,8 @@
       "color": "SILVER",
       "mileage": 1500,
       "components": [
-        "SALLOY WHEELS",
-        "EVASIVE STEERING"
+        "SALLOYWHEELS",
+        "EVASIVESTEERING"
       ]
     },
     {
@@ -17,20 +17,20 @@
       "mileage": 2500,
       "components": [
         "BLUETOOTH",
-        "AIR CONDITIONING",
+        "AIRCONDITIONING",
         "WABS",
-        "SALLOY WHEELS"
+        "SALLOYWHEELS"
       ]
     },
     {
       "model": "BMW",
       "price": 300,
-      "color": "WHITE",
+      "color": "BLUE",
       "mileage": 2800,
       "components": [
         "AIR",
-        "KEYLESS ENTRY",
-        "BACKUP CAMERA"
+        "KEYLESSENTRY",
+        "BACKUPCAMERA"
       ]
     }
   ]

@@ -1,13 +1,79 @@
 import json
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, List, Dict
+from enum import Enum
+import re
+from cars.model import Car
+from typing import Self
 
 
-class JsonFileService:
+class Validator(ABC):
+    @abstractmethod
+    def validate(self, data: dict[str, Any]) -> list[dict[str, Any]]:
+        pass
+
+
+@dataclass
+class CarValidator(Validator):
+    model_regex: str
+    colors: list[str]
+
+    def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        validated = []
+        for car_data in data:
+            errors = {}
+
+            if 'model' not in car_data:
+                errors |= {'model': ['not found']}
+            elif not re.match(self.model_regex, car_data['model']):
+                errors |= {'model': ['does not match the regex']}
+            if 'price' not in car_data:
+                errors |= {'price': ['not found']}
+            elif not car_data['price'] >= 0:
+                errors |= {'price': ['incorrect value']}
+            if 'color' not in car_data:
+                errors |= {'color': ['not found']}
+            elif car_data['color'] not in self.colors:
+                errors |= {'color': ['incorrect color of the car']}
+            if 'mileage' not in car_data:
+                errors |= {'mileage': ['not found']}
+            elif not car_data['mileage'] >= 0:
+                errors |= {'mileage': ['incorrect value']}
+            if 'components' not in car_data:
+                errors |= {'components': ['not found']}
+            else:
+                for c in car_data['components']:
+                    if not re.match(self.model_regex, c):
+                        errors |= {'components', ['does not match the regex']}
+            if len(errors) == 0:
+                validated.append(car_data)
+        return validated
+
+
+class Converter(ABC):
+    @abstractmethod
+    def convert(self, data: list[dict[str, Any]]) -> Car:
+        pass
+
+
+class CarConverter(Converter):
+
+    def convert(self, data: list[dict[str, Any]]) -> list[Car]:
+        return [Car.from_dict(car) for car in data]
+
+
+class FileService(ABC):
+
+    @abstractmethod
+    def get_lines(self, path: str, key: str = None):
+        pass
+
+
+class JsonFileService(FileService):
     SUPPORTED_EXTENSIONS = '.json'
 
-    @staticmethod
-    def get_lines(path: str, key: str) -> list[dict[str, Any]]:
+    def get_lines(self, path: str, key: str = None) -> list[dict[str, Any]]:
         if not path.endswith(JsonFileService.SUPPORTED_EXTENSIONS):
             raise AttributeError('File has incorrect extension')
         try:
@@ -19,7 +85,131 @@ class JsonFileService:
             raise AttributeError(f'Key not found: {key}')
         return data_from_file[key]
 
+
+class TxtFileService(FileService):
+    def get_lines(self, path: str, key: str = None) -> list[dict[str, Any]]:
+        cars_data = []
+        with open(path, 'r') as f:
+            lines = [line.strip() if line.endswith('\n') else line for line in f.readlines()]
+            for line in lines:
+                car_data = line.split(',')
+                car = {
+                    'model': car_data[0],
+                    'price': int(car_data[1]),
+                    'color': car_data[2],
+                    'mileage': int(car_data[3]),
+                    'components': car_data[4].split(':') if len(car_data[4]) > 0 else []
+                }
+                cars_data.append(car)
+            return cars_data
+
+
+class DataFactory(ABC):
+    @abstractmethod
+    def create_file_service(self) -> FileService:
+        pass
+
+    @abstractmethod
+    def create_validator(self) -> Validator:
+        pass
+
+    @abstractmethod
+    def create_converter(self) -> Converter:
+        pass
+
+
+class DataFactoryType(Enum):
+    FROM_TXT = 0,
+    FROM_JSON = 1
+
+
+@dataclass
+class FromTxtFileToCar(DataFactory):
+
+    def create_file_service(self) -> FileService:
+        return TxtFileService()
+
+    def create_validator(self) -> 'Validator':
+        return CarValidator('^[A-Z]+$', ['BLUE', 'SILVER'])
+
+    def create_converter(self) -> Converter:
+        return CarConverter()
+
+
+class FromJsonFileToCar(DataFactory):
+
+    def create_file_service(self) -> FileService:
+        return JsonFileService()
+
+    def create_validator(self) -> 'Validator':
+        return CarValidator('^[A-Z]+$', ['BLUE', 'SILVER'])
+
+    def create_converter(self) -> Converter:
+        return CarConverter()
+
+
+class DataProcessor:
+    def __init__(self, data_factory: DataFactory):
+        self.file_service = data_factory.create_file_service()
+        self.validator = data_factory.create_validator()
+        self.converter = data_factory.create_converter()
+
+    def process(self, path: str, key: str = None):
+        data_from_resource = self.file_service.get_lines(path, key)
+        validated_data = self.validator.validate(data_from_resource)
+        return self.converter.convert(validated_data)
+
+        # cars = []
+        # for car_data in data_from_resource:
+        #     is_valid, errors = self.validator.validate(car_data)
+        #     if is_valid:
+        #         cars.append(self.converter.convert(car_data))
+        # return cars
+
+    @classmethod
+    def create_processor(cls, factory_type: DataFactoryType) -> Self:
+        match factory_type:
+            case factory_type.FROM_TXT:
+                return cls(FromTxtFileToCar())
+            case factory_type.FROM_JSON:
+                return cls(FromJsonFileToCar())
+
+
+json_data_factory = FromJsonFileToCar()
+processor = DataProcessor(json_data_factory)
+
+cars1 = processor.process('../../data/cars.json', 'cars')
+
+txt_data_factory = FromTxtFileToCar()
+processor2 = DataProcessor(txt_data_factory)
+cars2 = processor2.process('../../data/cars.txt')
+
+print(cars1)
+print(cars2)
+
+# from_json = JsonFileService().get_lines('../../data/cars.json', 'cars')
+# from_txt = TxtFileService().get_lines('../../data/cars.txt')
+
+# print(from_txt)
+# from_json = JsonFileService().get_lines('../../data/cars.json', 'cars')
+# from_txt = TxtFileService().get_lines('../../data/cars.txt')
+# print(from_json)
+# print(from_txt)
+
 #
-# d = JsonFileService.get_lines('../../test_data/cars_test.json', 'cars')
-# print(list(d[0].values()))
-# print(list(d[1].values()))
+# class FileServiceFactory(ABC):
+#     @abstractmethod
+#     def get_file_service(self) -> FileService:
+#         pass
+#
+#
+# class JsonFileServiceFactory(FileServiceFactory):
+#
+#     def get_file_service(self) -> FileService:
+#         return JsonFileService()
+#
+#
+# class TextFileServiceFactory(FileServiceFactory):
+#
+#     def get_file_service(self) -> FileService:
+#         return TxtFileService()
