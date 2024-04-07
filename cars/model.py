@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Any, Self
 
 
 @dataclass
@@ -22,3 +23,10 @@ class Car:
         if min_price > max_price:
             raise ValueError(f'Price range is not correct: [{min_price} ,{max_price}]')
         return min_price <= self.price <= max_price
+
+    def has_mileage_higher_than(self, mileage_limit: int) -> bool:
+        return self.mileage > mileage_limit
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Self:
+        return cls(**data)
