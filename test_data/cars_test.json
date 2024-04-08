@@ -6,18 +6,26 @@
       "color": "SILVER",
       "mileage": 1500,
       "components": [
-        "SALLOY WHEELS",
-        "EVASIVE STEERING"
+        "CAMERA"
       ]
     },
     {
       "model": "BMW",
-      "price": 300,
+      "price": 3000,
       "color": "WHITE",
       "mileage": 2800,
       "components": [
-        "AIR",
         "KEYLESS ENTRY"
+      ]
+    },
+    {
+      "model": "TOYOTA",
+      "price": 4000,
+      "color": "BLUE",
+      "mileage": 10000,
+      "components": [
+        "KEYLESS ENTRY",
+        "BLUETOOTH"
       ]
     }
   ]
