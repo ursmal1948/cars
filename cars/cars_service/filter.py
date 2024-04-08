@@ -21,7 +21,6 @@ class FilterService:
     def get_cars_with_price_between(self, min_pirce: int, max_price: int) -> list[Car]:
         matching_cars = self.filter_cars(lambda car: car.has_price_between(min_pirce, max_price))
         return sorted(matching_cars, key=lambda car: car.model)
-        # return sorted(matching_cars, key=cmp_to_key(self.sort_by_model))
 
     def get_extreme_priced_cars(self, extreme_fn: Callable[[list[int]], int]) -> Car | list[Car]:
         grouped_by_price = defaultdict(list)
