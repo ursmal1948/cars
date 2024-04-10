@@ -3,11 +3,11 @@ from collections import defaultdict, Counter
 from cars.model import Car
 from typing import Callable
 from functools import cmp_to_key
+from cars.cars_service.service import CarsService
 
 
 @dataclass
-class GroupAndSortService:
-    cars: list[Car] = field(default_factory=list[Car])
+class GroupAndSortService(CarsService):
 
     def sort_cars(self, sort_fn: Callable[[Car, Car], bool]) -> list[Car]:
         return sorted(self.cars, key=cmp_to_key(sort_fn))

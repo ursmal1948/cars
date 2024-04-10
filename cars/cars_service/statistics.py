@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from cars.model import Car
 from cars.enums import Category
+from cars.cars_service.service import CarsService
 
 
 @dataclass
@@ -12,8 +13,7 @@ class Statistics:
 
 
 @dataclass
-class StatisticsService:
-    cars: list[Car] = field(default_factory=list)
+class StatisticsService(CarsService):
 
     def get_statistics_for(self, category: Category) -> Statistics:
         attribute_name = category.name.lower()
