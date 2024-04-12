@@ -10,3 +10,4 @@ class Color(Enum):
 class Category(Enum):
     PRICE = 0,
     MILEAGE = 1
+    INVALID_CATEGORY = 2
