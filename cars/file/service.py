@@ -58,7 +58,7 @@ class Validator(ABC):
 
 
 @dataclass
-class CarValidator(Validator):
+class CarsValidator(Validator):
     model_regex: str
     colors: list[str]
 
@@ -100,7 +100,7 @@ class Converter(ABC):
         pass
 
 
-class CarConverter(Converter):
+class CarsConverter(Converter):
     def convert(self, data: list[dict[str, Any]]) -> list[Car]:
         return [Car.from_dict(car) for car in data]
 
@@ -131,10 +131,10 @@ class FromTxtFileToCar(DataFactory):
         return TxtFileService()
 
     def create_validator(self) -> 'Validator':
-        return CarValidator(r'^[A-Z\s]+$', ['BLUE', 'SILVER'])
+        return CarsValidator(r'^[A-Z\s]+$', ['BLUE', 'SILVER'])
 
     def create_converter(self) -> Converter:
-        return CarConverter()
+        return CarsConverter()
 
 
 class FromJsonFileToCar(DataFactory):
@@ -143,10 +143,10 @@ class FromJsonFileToCar(DataFactory):
         return JsonFileService()
 
     def create_validator(self) -> 'Validator':
-        return CarValidator(r'^[A-Z\s]+$', ['BLUE', 'SILVER'])
+        return CarsValidator(r'^[A-Z\s]+$', ['BLUE', 'SILVER'])
 
     def create_converter(self) -> Converter:
-        return CarConverter()
+        return CarsConverter()
 
 
 class DataProcessor:
