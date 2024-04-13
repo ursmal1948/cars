@@ -1,6 +1,5 @@
 import pytest
-from cars.file.service import JsonFileService
-import logging
+from cars.file.reader import JsonFileService
 
 
 class TestJsonFileServiceGetLinesPathNotCorrect:

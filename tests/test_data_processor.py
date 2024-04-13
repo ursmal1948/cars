@@ -1,15 +1,8 @@
-from cars.file.service import (
-    DataProcessor,
-    JsonFileService,
-    TxtFileService,
-    CarValidator,
-    CarConverter,
-    FromTxtFileToCar,
-    FromJsonFileToCar,
-)
-from cars.model import Car
 import logging
-from unittest.mock import MagicMock
+
+from cars.model import Car
+from cars.file.service import FromTxtFileToCar, FromJsonFileToCar
+from cars.file.service import DataProcessor
 
 
 class TestDataProcessor:
@@ -25,6 +18,7 @@ class TestDataProcessor:
         json_data_factory = FromJsonFileToCar()
         processor = DataProcessor(json_data_factory)
         cars = processor.process(json_path_correct_data, 'cars')
+
         assert cars == [
             Car(model='AUDI', price=9000, color='SILVER', mileage=1500, components=['CAMERA']),
             Car(model='TOYOTA', price=4000, color='BLUE', mileage=10000, components=['KEYLESS ENTRY', 'BLUETOOTH'])
