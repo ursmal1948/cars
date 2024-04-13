@@ -4,7 +4,8 @@ from enum import Enum
 class Color(Enum):
     SILVER = 1,
     GREEN = 2,
-    WHITE = 3
+    WHITE = 3,
+    BLUE = 4
 
 
 class Category(Enum):
