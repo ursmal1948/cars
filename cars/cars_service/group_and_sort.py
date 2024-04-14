@@ -66,13 +66,13 @@ class GroupAndSortService(CarsService):
         result = grouped_by_price[most_expensive]
         return result if len(result) > 1 else result[0]
 
-    def group_most_expensive_car_by_model(self) -> dict[str, list[Car]]:
+    def group_most_expensive_cars_by_model(self) -> dict[str, list[Car]]:
         """
-        Groups the most expensive car for each model.
+        Groups the most expensive car/cars for each model.
 
         Returns:
             dict[str, list[Car]]: A dictionary where keys are car models and values are lists containing
-            the most expensive car for each model.
+            the most expensive car/cars for each model.
         """
 
         most_expensive_car_by_model = defaultdict(list)
