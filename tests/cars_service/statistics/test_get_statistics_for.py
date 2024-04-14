@@ -1,5 +1,4 @@
 import pytest
-
 from cars.cars_service.statistics import StatisticsService, Statistics
 from cars.enums import Category
 from cars.model import Car

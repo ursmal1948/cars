@@ -1,4 +1,3 @@
-import pytest
 from cars.cars_service.filter import FilterService
 from cars.model import Car
 

@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from typing import Any, Self
-from cars.enums import Color
 
 
 @dataclass

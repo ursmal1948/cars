@@ -69,13 +69,3 @@ class DataProcessor:
                 return cls(FromTxtFileToCar())
             case factory_type.FROM_JSON:
                 return cls(FromJsonFileToCar())
-
-# json_data_factory = FromJsonFileToCar()
-# processor = DataProcessor(json_data_factory)
-# cars1 = processor.process('../../data/cars.json', 'cars')
-#
-# txt_data_factory = FromTxtFileToCar()
-# processor2 = DataProcessor(txt_data_factory)
-# cars2 = processor2.process('../../data/cars.txt', None)
-# print(cars1)
-# print(cars2)

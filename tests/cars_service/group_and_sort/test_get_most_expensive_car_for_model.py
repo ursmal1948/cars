@@ -1,6 +1,5 @@
 import pytest
 from cars.model import Car
-
 from cars.cars_service.group_and_sort import GroupAndSortService
 
 
