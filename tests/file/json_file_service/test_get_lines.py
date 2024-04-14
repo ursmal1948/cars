@@ -13,9 +13,11 @@ class TestJsonFileServiceGetLinesPathNotCorrect:
             JsonFileService().get_lines('test_data/cars_testt.json', 'key')
         assert str(e.value).startswith('File not found')
 
-    def test_when_key_not_found(self):
+
+class TestJsonFileServiceGetLinesKeyNotFound:
+    def test_when_key_not_found(self, json_path_correct_data):
         with pytest.raises(AttributeError) as e:
-            JsonFileService().get_lines('test_data/cars_test.json', 'people')
+            JsonFileService().get_lines(json_path_correct_data, 'people')
         assert str(e.value).startswith('Key not found')
 
 
@@ -26,8 +28,8 @@ class TestJsonFileServiceGetLinesEmptyContent:
 
 
 class TestJsonFileServiceGetLinesContentCorrect:
-    def test_when_content_present(self):
-        data = JsonFileService().get_lines('test_data/cars_test.json', 'cars')
+    def test_when_content_present(self, json_path_correct_data):
+        data = JsonFileService().get_lines(json_path_correct_data, 'cars')
         assert len(data) == 3
         assert list(data[0].values()) == ['AUDI', 9000, 'SILVER', 1500, ['CAMERA']]
         assert list(data[1].values()) == ['BMW', 3000, 'WHITE', 2800, ['KEYLESS ENTRY']]
