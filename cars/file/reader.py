@@ -31,16 +31,25 @@ class TxtFileService(FileService):
 
     def get_lines(self, path: str, key: str = None) -> list[dict[str, Any]]:
         cars_data = []
-        with open(path, 'r') as f:
-            lines = [line.strip() if line.endswith('\n') else line for line in f.readlines()]
-            for line in lines:
-                car_data = line.split(',')
-                car = {
-                    'model': car_data[0],
-                    'price': int(car_data[1]),
-                    'color': car_data[2],
-                    'mileage': int(car_data[3]),
-                    'components': car_data[4].split(':') if len(car_data[4]) > 0 else []
-                }
-                cars_data.append(car)
-            return cars_data
+        if not path.endswith(TxtFileService.SUPPORTED_EXTENSIONS):
+            raise AttributeError(f'File has incorrect extension: {path[-3:]}')
+        try:
+            with open(path, 'r') as f:
+                lines = [line.strip() if line.endswith('\n') else line for line in f.readlines()]
+
+                for line in lines:
+                    try:
+                        car_data = line.split(',')
+                        car = {
+                            'model': car_data[0],
+                            'price': int(car_data[1]),
+                            'color': car_data[2],
+                            'mileage': int(car_data[3]),
+                            'components': car_data[4].split(':') if len(car_data[4]) > 0 else []
+                        }
+                        cars_data.append(car)
+                    except ValueError:
+                        raise ValueError(f'Error parsing line: {line}')
+                return cars_data
+        except FileNotFoundError as fe:
+            raise FileNotFoundError(f'File not found: {fe}')
