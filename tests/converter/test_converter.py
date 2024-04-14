@@ -1,6 +1,5 @@
 from cars.converter import CarsConverter
 from cars.model import Car
-from cars.enums import Color
 
 
 class TestDataCars:

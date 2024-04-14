@@ -49,7 +49,6 @@ class CarsValidator(Validator):
                     errors[attr] = [f'Validation failed for {attr}']
             else:
                 errors[attr] = [f'{attr} not found']
-        # print(errors)
         return errors
 
     def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -59,9 +58,3 @@ class CarsValidator(Validator):
             if not errors:
                 validated_cars_data.append(car_data)
         return validated_cars_data
-
-# data2 = [{'model': 'AUDI', 'price': 900, 'color': 'SILVER', 'mileage': 1200, 'components': ['ABS', 'BLUETOOTH']},
-#          {'model': 'BMW', 'price': 300, 'color': 'WHITE', 'mileage': 500,
-#           'components': ['AIR CONDITIONING', 'CAMERA']}]
-# cv = CarsValidator(model_regex=r'^[A-Z\s]+$', colors=['SILVER', 'GREEN', 'WHITE', 'BLUE'])
-# print(cv.validate(data2))
