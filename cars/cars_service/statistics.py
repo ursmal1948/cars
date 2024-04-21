@@ -1,12 +1,15 @@
 from dataclasses import dataclass, field
 from decimal import Decimal
-from cars.model import Car
 from cars.enums import Category
-from cars.cars_service.service import CarsService
+from cars.model import Car
 
 
 @dataclass
 class Statistics:
+    min_v: Decimal
+    avg_v: Decimal
+    max_v: Decimal
+
     """
     Represents statistical information about a category of cars.
 
@@ -16,13 +19,10 @@ class Statistics:
         max_v (Decimal): The maximum value of the specified category among the cars.
     """
 
-    min_v: Decimal
-    avg_v: Decimal
-    max_v: Decimal
-
 
 @dataclass
-class StatisticsService(CarsService):
+class StatisticsService:
+    cars: list[Car] = field(default_factory=list[Car])
 
     def get_statistics_for(self, category: Category) -> Statistics:
         """

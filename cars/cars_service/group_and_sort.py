@@ -1,17 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 from typing import Callable
 from functools import cmp_to_key
-from cars.cars_service.service import CarsService
 from cars.model import Car
 
 
 @dataclass
-class GroupAndSortService(CarsService):
+class GroupAndSortService:
+    cars: list[Car] = field(default_factory=list[Car])
 
-    def sort_cars(self, sort_fn: Callable[[Car, Car], bool]) -> list[Car]:
-        return sorted(self.cars, key=cmp_to_key(sort_fn))
+    def sort_cars(self, sort_fn: Callable[[Car, Car], bool], reverse: bool = False) -> list[Car]:
+        return sorted(self.cars, key=cmp_to_key(sort_fn), reverse=reverse)
 
+    # Przeniesc to modelu.
     @staticmethod
     def compare_cars(car1: Car, car2: Car, sorting_key: str) -> int:
         key_value1 = getattr(car1, sorting_key)
@@ -27,7 +28,7 @@ class GroupAndSortService(CarsService):
     def sort_by(self, sorting_key: str) -> list[Car]:
         if not all(hasattr(car, sorting_key) for car in self.cars):
             raise AttributeError('Incorrect key')
-        return self.sort_cars(sort_fn=lambda car1, car2: self.compare_cars(car1, car2, sorting_key))
+        return self.sort_cars(lambda car1, car2: self.compare_cars(car1, car2, sorting_key))
 
     def group_by_color(self) -> dict[str, int]:
         """

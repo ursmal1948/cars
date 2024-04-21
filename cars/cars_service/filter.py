@@ -1,12 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from cars.model import Car
 from typing import Callable
 from collections import defaultdict
-from cars.cars_service.service import CarsService
 
 
 @dataclass
-class FilterService(CarsService):
+class FilterService:
+    cars: list[Car] = field(default_factory=list[Car])
 
     def filter_cars(self, filter_fn: Callable[[Car], bool]) -> list[Car]:
         """
