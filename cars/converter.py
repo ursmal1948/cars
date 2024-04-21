@@ -5,7 +5,7 @@ from cars.model import Car
 
 class Converter(ABC):
     @abstractmethod
-    def convert(self, data: list[dict[str, Any]]) -> Car:
+    def convert(self, data: list[dict[str, Any]]) -> list[Car]:
         pass
 
 
