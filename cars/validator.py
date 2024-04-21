@@ -1,60 +1,54 @@
-from abc import ABC, abstractmethod
 from typing import Any
 import re
+from dataclasses import dataclass
+from typing import Callable
 
 
-class Validator(ABC):
-    @abstractmethod
-    def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        pass
+@dataclass
+class Validator:
+    validation_functions: dict[str, Callable[[Any], bool]]
 
-
-class CarsValidator(Validator):
-
-    def __init__(self, model_regex: str, colors: list[str]) -> None:
-        self.validation_functions = {
-            'model': self.validate_model,
-            'price': self.validate_price,
-            'color': self.validate_color,
-            'mileage': self.validate_mileage,
-            'components': self.validate_components
-        }
-        self.model_regex = model_regex
-        self.colors = colors
-
-    def validate_model(self, model: str) -> bool:
-        if re.match(self.model_regex, model):
-            return True
-        return False
-
-    @staticmethod
-    def validate_price(price: int) -> bool:
-        return price > 0
-
-    def validate_color(self, color: str) -> bool:
-        return color in self.colors
-
-    @staticmethod
-    def validate_mileage(mileage: int) -> bool:
-        return mileage > 0
-
-    def validate_components(self, components: list[str]) -> bool:
-        return all(re.match(self.model_regex, c) for c in components)
-
-    def validate_car(self, car_data: dict[str, Any]) -> dict[str, Any]:
+    def validate_item(self, item_data: dict[str, Any]) -> dict[str, list[str]]:
         errors = {}
         for attr, func in self.validation_functions.items():
-            if attr in car_data:
-                if not func(car_data[attr]):
+            if attr in item_data:
+                if not func(item_data[attr]):
                     errors[attr] = [f'Validation failed for {attr}']
             else:
                 errors[attr] = [f'{attr} not found']
         return errors
 
+
+class CarsValidator(Validator):
+
+    def __init__(self, model_regex: str, colors: list[str], price_min: int = 0) -> None:
+        super().__init__({
+            'model': self._validate_model,
+            'price': self._validate_price,
+            'color': self._validate_color,
+            'mileage': self._validate_mileage,
+            'components': self._validate_components
+        })
+        self.model_regex = model_regex
+        self.colors = colors
+        self.price_min = price_min
+
+    def _validate_model(self, model: str) -> bool:
+        if re.match(self.model_regex, model):
+            return True
+        return False
+
+    def _validate_price(self, price: int) -> bool:
+        return price > self.price_min
+
+    def _validate_color(self, color: str) -> bool:
+        return color in self.colors
+
+    def _validate_mileage(self, mileage: int) -> bool:
+        return mileage > self.price_min
+
+    def _validate_components(self, components: list[str]) -> bool:
+        return all(re.match(self.model_regex, c) for c in components)
+
     def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        validated_cars_data = []
-        for car_data in data:
-            errors = self.validate_car(car_data)
-            if not errors:
-                validated_cars_data.append(car_data)
-        return validated_cars_data
+        return [car for car in data if len(self.validate_item(car)) == 0]

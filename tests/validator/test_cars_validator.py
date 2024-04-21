@@ -16,11 +16,11 @@ class TestCarsValidator(unittest.TestCase):
         self.cars_validator = CarsValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
 
     def test_validate_car_valid(self):
-        validated_data = self.cars_validator.validate_car(TestCarsData.VALID_CAR_1)
+        validated_data = self.cars_validator.validate_item(TestCarsData.VALID_CAR_1)
         self.assertTrue(validated_data == {})
 
     def test_validate_car_invalid(self):
-        validated_data = self.cars_validator.validate_car(TestCarsData.INVALID_CAR_1)
+        validated_data = self.cars_validator.validate_item(TestCarsData.INVALID_CAR_1)
         self.assertFalse(validated_data == {})
 
     def test_validate_cars_when_all_valid(self):
