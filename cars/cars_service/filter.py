@@ -8,6 +8,14 @@ from collections import defaultdict
 class FilterService:
     cars: list[Car] = field(default_factory=list[Car])
 
+    def get_cars(self) -> list[Car]:
+        return self.cars
+
+    def add_cars(self, cars: list[Car]) -> None:
+        if len(cars) == 0:
+            pass
+        self.get_cars().extend(cars)
+
     def filter_cars(self, filter_fn: Callable[[Car], bool]) -> list[Car]:
         """
         Filters cars based on a provided filter function.
@@ -33,21 +41,6 @@ class FilterService:
         """
 
         return self.filter_cars(lambda car: car.has_mileage_higher_than(mileage_limit))
-
-    @staticmethod
-    def sort_by_model(car_1: Car, car_2: Car) -> int:
-        """
-        Sorts cars by model.
-
-          Parameters:
-              car_1 (Car): First car for comparison.
-              car_2 (Car): Second car for comparison.
-
-          Returns:
-              int: Negative if car_1's model comes before car_2's model, 0 if equal, positive otherwise.
-          """
-
-        return (car_1.model > car_2.model) - (car_1.model < car_2.model)
 
     def get_cars_with_price_between(self, min_price: int, max_price: int) -> list[Car]:
         """

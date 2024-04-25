@@ -78,6 +78,8 @@ class Car:
           Returns:
               bool: True if the car's mileage is higher than the specified limit, False otherwise.
           """
+        if mileage_limit < 0:
+            raise ValueError(f'Mileage limit must be a non-negative value: {mileage_limit}')
 
         return self.mileage > mileage_limit
 
