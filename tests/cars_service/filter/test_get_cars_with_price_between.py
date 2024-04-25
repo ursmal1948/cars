@@ -14,14 +14,14 @@ class TestFilterServiceGetCarsWithPriceBetween:
         assert cars == []
 
     def test_when_there_are_not_all_cars_within_price_range(self, filter_service_cars):
-        cars = filter_service_cars.get_cars_with_price_between(40, 100)
+        cars = filter_service_cars.get_cars_with_price_between(50, 100)
         assert cars == [
             Car('BMW', 100, 'WHITE', 2000, []),
             Car('TOYOTA', 50, 'SILVER', 200, [])
         ]
 
     def test_when_there_are_all_cars_within_price_range(self, filter_service_cars):
-        cars = filter_service_cars.get_cars_with_price_between(40, 3000)
+        cars = filter_service_cars.get_cars_with_price_between(50, 300)
         assert cars == [Car('AUDI', 300, 'BLUE', 1000, []),
                         Car('BMW', 100, 'WHITE', 2000, []),
                         Car('TOYOTA', 50, 'SILVER', 200, [])]
