@@ -1,5 +1,5 @@
 import unittest
-from cars.validator import CarsValidator
+from cars.validator import CarsDataValidator
 
 
 class TestCarsData:
@@ -13,7 +13,7 @@ class TestCarsData:
 class TestCarsValidator(unittest.TestCase):
 
     def setUp(self):
-        self.cars_validator = CarsValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
+        self.cars_validator = CarsDataValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
 
     def test_validate_car_valid(self):
         validated_data = self.cars_validator.validate_item(TestCarsData.VALID_CAR_1)

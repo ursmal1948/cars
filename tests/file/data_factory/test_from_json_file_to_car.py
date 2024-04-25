@@ -1,7 +1,7 @@
 import unittest
 from cars.file.reader import JsonFileService
 from cars.file.service import FromJsonFileToCar
-from cars.validator import CarsValidator
+from cars.validator import CarsDataValidator
 from cars.converter import CarsConverter
 
 
@@ -16,7 +16,7 @@ class DataFactoryFromTxtFileToCar(unittest.TestCase):
 
     def test_create_validator(self):
         validator = self.factory.create_validator()
-        self.assertIsInstance(validator, CarsValidator)
+        self.assertIsInstance(validator, CarsDataValidator)
         self.assertEqual(validator.model_regex, r'^[A-Z\s]+$')
         self.assertEqual(validator.colors, ['SILVER', 'BLUE'])
 

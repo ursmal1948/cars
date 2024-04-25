@@ -4,7 +4,7 @@ from cars.file.service import FromTxtFileToCar, FromJsonFileToCar
 from cars.file.service import DataProcessor
 from cars.file.service import DataFactoryType
 from cars.file.reader import TxtFileService, JsonFileService
-from cars.validator import CarsValidator
+from cars.validator import CarsDataValidator
 from cars.converter import CarsConverter
 
 
@@ -35,11 +35,11 @@ class TestDataProcessorCreateProcessor(unittest.TestCase):
     def test_create_from_txt_factory(self):
         processor = DataProcessor.create_processor(DataFactoryType.FROM_TXT)
         self.assertIsInstance(processor.file_service, TxtFileService)
-        self.assertIsInstance(processor.validator, CarsValidator)
+        self.assertIsInstance(processor.validator, CarsDataValidator)
         self.assertIsInstance(processor.converter, CarsConverter)
 
     def test_create_from_json_factory(self):
         processor = DataProcessor.create_processor(DataFactoryType.FROM_JSON)
         self.assertIsInstance(processor.file_service, JsonFileService)
-        self.assertIsInstance(processor.validator, CarsValidator)
+        self.assertIsInstance(processor.validator, CarsDataValidator)
         self.assertIsInstance(processor.converter, CarsConverter)
