@@ -1,18 +1,10 @@
-from dataclasses import dataclass, field
 from collections import defaultdict, Counter
-from typing import Callable
-from functools import cmp_to_key
 from cars.model import Car
+from .service import CarsService
 
 
-@dataclass
-class GroupAndSortService:
-    cars: list[Car] = field(default_factory=list[Car])
+class GroupAndSortService(CarsService):
 
-    def sort_cars(self, sort_fn: Callable[[Car, Car], bool], reverse: bool = False) -> list[Car]:
-        return sorted(self.cars, key=cmp_to_key(sort_fn), reverse=reverse)
-
-    # Przeniesc to modelu.
     @staticmethod
     def compare_cars(car1: Car, car2: Car, sorting_key: str) -> int:
         key_value1 = getattr(car1, sorting_key)
