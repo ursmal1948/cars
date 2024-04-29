@@ -2,7 +2,6 @@ import pytest
 from cars.model import Car
 
 
-#
 @pytest.fixture
 def filter_service_cars_with_additional_cars(filter_service_cars):
     filter_service_cars.add_cars([Car('MAZDA', 300, 'SILVER', 200, []), Car('OPEL', 50, 'WHITE', 2000, [])])

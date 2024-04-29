@@ -1,38 +1,24 @@
-from cars.cars_service.group_and_sort import GroupAndSortService
 from cars.model import Car
+import pytest
 
 
-class TestCarsService:
-    CAR_1 = Car('A', 1, 'WHITE', 10, [])
-    CAR_2 = Car('B', 2, 'BLUE', 20, [])
-    CAR_3 = Car('C', 3, 'SILVER', 30, [])
-    CAR_4 = Car('A', 1, 'BLACK', 30, [])
+@pytest.fixture
+def group_and_sort_service_cars_with_additional_cars(group_and_sort_service_cars):
+    group_and_sort_service_cars.add_cars([Car('AUDI', 2, 'WHITE', 100, []), Car('BMW', 1, 'BLACK', 2000, [])])
+    return group_and_sort_service_cars
 
 
 class TestGroupAndSortServiceGroupMostExpensiveCarsByModel:
 
-    def test_when_models_have_one_most_expensive_car(self):
-        cars_service = GroupAndSortService(
-            [TestCarsService.CAR_1,
-             TestCarsService.CAR_2,
-             TestCarsService.CAR_3,
-             ]
-        )
-        result = cars_service.group_most_expensive_cars_by_model()
-        assert result == {'A': Car('A', 1, 'WHITE', 10, []),
-                          'B': Car('B', 2, 'BLUE', 20, []),
-                          'C': Car('C', 3, 'SILVER', 30, [])}
+    def test_when_models_have_one_most_expensive_car(self, group_and_sort_service_cars):
+        result = group_and_sort_service_cars.group_most_expensive_cars_by_model()
+        assert result == {'BMW': Car('BMW', 1, 'WHITE', 2000, []),
+                          'AUDI': Car('AUDI', 2, 'BLUE', 1000, []),
+                          'TOYOTA': Car('TOYOTA', 3, 'SILVER', 200, [])}
 
-    def test_when_models_have_more_than_one_most_expensive_car(self):
-        cars_service = GroupAndSortService(
-            [TestCarsService.CAR_1,
-             TestCarsService.CAR_2,
-             TestCarsService.CAR_3,
-             TestCarsService.CAR_4
-             ]
-        )
-        result = cars_service.group_most_expensive_cars_by_model()
-        assert result == {'A': [Car('A', 1, 'WHITE', 10, []),
-                                Car('A', 1, 'BLACK', 30, [])],
-                          'B': Car('B', 2, 'BLUE', 20, []),
-                          'C': Car('C', 3, 'SILVER', 30, [])}
+    def test_when_models_have_more_than_one_most_expensive_car(self, group_and_sort_service_cars_with_additional_cars):
+        result = group_and_sort_service_cars_with_additional_cars.group_most_expensive_cars_by_model()
+        assert result == {'AUDI': [Car('AUDI', 2, 'BLUE', 1000, []),
+                                   Car('AUDI', 2, 'WHITE', 100, [])],
+                          'BMW': [Car('BMW', 1, 'WHITE', 2000, []), Car('BMW', 1, 'BLACK', 2000, [])],
+                          'TOYOTA': Car('TOYOTA', 3, 'SILVER', 200, [])}
