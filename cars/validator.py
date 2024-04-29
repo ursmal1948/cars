@@ -2,6 +2,7 @@ from typing import Any
 import re
 from dataclasses import dataclass
 from typing import Callable
+from abc import ABC, abstractmethod
 
 
 @dataclass
@@ -18,8 +19,12 @@ class Validator:
                 errors[attr] = [f'{attr} not found']
         return errors
 
+    # @abstractmethod
+    # def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    #     pass
 
-class CarsValidator(Validator):
+
+class CarsDataValidator(Validator):
 
     def __init__(self, model_regex: str, colors: list[str], price_min: int = 0) -> None:
         super().__init__({

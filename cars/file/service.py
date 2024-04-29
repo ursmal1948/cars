@@ -4,7 +4,7 @@ from typing import Self
 from enum import Enum
 from cars.file.reader import FileService, JsonFileService, TxtFileService
 from cars.converter import Converter, CarsConverter
-from cars.validator import Validator, CarsValidator
+from cars.validator import Validator, CarsDataValidator
 
 
 class DataFactory(ABC):
@@ -33,7 +33,7 @@ class FromTxtFileToCar(DataFactory):
         return TxtFileService()
 
     def create_validator(self) -> 'Validator':
-        return CarsValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
+        return CarsDataValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
 
     def create_converter(self) -> Converter:
         return CarsConverter()
@@ -45,7 +45,7 @@ class FromJsonFileToCar(DataFactory):
         return JsonFileService()
 
     def create_validator(self) -> 'Validator':
-        return CarsValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
+        return CarsDataValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
 
     def create_converter(self) -> Converter:
         return CarsConverter()
