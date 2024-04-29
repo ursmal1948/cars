@@ -22,7 +22,6 @@ This project simplifies retrieving car data from multiple sources. Using an abst
 - Data Retrieval: Fetching data from various sources, including JSON and TXT files, enabling users to access car information from diverse datasets.
 - Data Validation: Before conversion, validation of the retrieved data, ensuring integrity and accuracy.
 - Data Conversion: Leveraging an abstract factory pattern, conversion of the retrieved data into Car instances.
-- 
 ## Cars Service
 - The Filter service class provides a comprehensive filtering mechanism for car data. Users can easily extract subsets of cars that meet particular requirements,
 such as mileage limits or price ranges. 
