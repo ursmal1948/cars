@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 
 
 @dataclass
-class Validator(ABC):
+class Validator:
     validation_functions: dict[str, Callable[[Any], bool]]
 
     def validate_item(self, item_data: dict[str, Any]) -> dict[str, list[str]]:

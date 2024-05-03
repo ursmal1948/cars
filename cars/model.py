@@ -8,7 +8,19 @@ class Car:
     price: int
     color: str
     mileage: int
-    components: list[str] = field(default_factory=list[str])
+    components: list[str] = field(default_factory=list)
+
+    def __hash__(self):
+        return hash((self.model, self.price, self.color, self.mileage, self.components))
+
+    def __eq__(self, other):
+        if not isinstance(other, Car):
+            return False
+        return (self.model == other.model
+                and self.price == other.price
+                and self.color == other.color
+                and self.mileage == other.mileage
+                and self.components == other.components)
 
     def has_color(self, expected_color: str) -> bool:
         """
