@@ -2,7 +2,7 @@ from cars.model import Car
 from cars.file.service import FromTxtFileToCar, FromJsonFileToCar, DataProcessor, DataFactoryType
 from cars.file.reader import TxtFileService, JsonFileService
 from cars.validator import CarsDataValidator
-from cars.converter import CarsConverter
+from cars.converter import AsyncCarsConverter
 import unittest
 
 
@@ -23,7 +23,7 @@ class TestDataFactoryFromTxtFileToCar(unittest.TestCase):
 
     def test_create_converter(self):
         converter = self.factory.create_converter()
-        self.assertIsInstance(converter, CarsConverter)
+        self.assertIsInstance(converter, AsyncCarsConverter)
 
 
 class TestDataFactoryFromJsonFileToCar(unittest.TestCase):
@@ -43,7 +43,7 @@ class TestDataFactoryFromJsonFileToCar(unittest.TestCase):
 
     def test_create_converter(self):
         converter = self.factory.create_converter()
-        self.assertIsInstance(converter, CarsConverter)
+        self.assertIsInstance(converter, AsyncCarsConverter)
 
 
 class TestDataProcessorProcess:
@@ -74,10 +74,10 @@ class TestDataProcessorCreateProcessor(unittest.TestCase):
         processor = DataProcessor.create_processor(DataFactoryType.FROM_TXT)
         self.assertIsInstance(processor.file_service, TxtFileService)
         self.assertIsInstance(processor.validator, CarsDataValidator)
-        self.assertIsInstance(processor.converter, CarsConverter)
+        self.assertIsInstance(processor.converter, AsyncCarsConverter)
 
     def test_create_from_json_factory(self):
         processor = DataProcessor.create_processor(DataFactoryType.FROM_JSON)
         self.assertIsInstance(processor.file_service, JsonFileService)
         self.assertIsInstance(processor.validator, CarsDataValidator)
-        self.assertIsInstance(processor.converter, CarsConverter)
+        self.assertIsInstance(processor.converter, AsyncCarsConverter)

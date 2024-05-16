@@ -1,23 +1,22 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from typing import Self
 from enum import Enum
 from cars.file.reader import FileService, JsonFileService, TxtFileService
-from cars.converter import Converter, CarsConverter
-from cars.validator import Validator, CarsDataValidator
+from cars.converter import AsyncConverter, AsyncCarsConverter
+from cars.validator import AsyncValidator, CarsDataValidator
+from typing import Awaitable
 
 
 class DataFactory(ABC):
     @abstractmethod
-    def create_file_service(self) -> FileService:
+    async def create_file_service(self) -> Awaitable[FileService]:
         pass
 
     @abstractmethod
-    def create_validator(self) -> Validator:
+    async def create_validator(self) -> Awaitable[AsyncValidator]:
         pass
 
     @abstractmethod
-    def create_converter(self) -> Converter:
+    async def create_converter(self) -> Awaitable[AsyncConverter]:
         pass
 
 
@@ -26,44 +25,51 @@ class DataFactoryType(Enum):
     FROM_JSON = 1
 
 
-@dataclass
 class FromTxtFileToCar(DataFactory):
 
-    def create_file_service(self) -> FileService:
+    async def create_file_service(self) -> FileService:
         return TxtFileService()
 
-    def create_validator(self) -> 'Validator':
+    async def create_validator(self) -> AsyncValidator:
         return CarsDataValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
 
-    def create_converter(self) -> Converter:
-        return CarsConverter()
+    async def create_converter(self) -> AsyncConverter:
+        return AsyncCarsConverter()
 
 
 class FromJsonFileToCar(DataFactory):
 
-    def create_file_service(self) -> FileService:
+    async def create_file_service(self) -> FileService:
         return JsonFileService()
 
-    def create_validator(self) -> 'Validator':
+    async def create_validator(self) -> 'AsyncValidator':
         return CarsDataValidator(r'^[A-Z\s]+$', ['SILVER', 'BLUE'])
 
-    def create_converter(self) -> Converter:
-        return CarsConverter()
+    async def create_converter(self) -> AsyncConverter:
+        return AsyncCarsConverter()
 
 
 class DataProcessor:
     def __init__(self, data_factory: DataFactory):
-        self.file_service = data_factory.create_file_service()
-        self.validator = data_factory.create_validator()
-        self.converter = data_factory.create_converter()
+        self.file_service = None
+        self.validator = None
+        self.converter = None
+        self.data_factory = data_factory
 
-    def process(self, path: str, key: str = None):
-        data_from_resource = self.file_service.get_lines(path, key)
-        validated_data = self.validator.validate(data_from_resource)
-        return self.converter.convert(validated_data)
+    async def initialize(self):
+        self.file_service = await self.data_factory.create_file_service()
+        self.validator = await self.data_factory.create_validator()
+        self.converter = await self.data_factory.create_converter()
+
+    async def process(self, path: str, key: str = None):
+        if self.file_service is None or self.validator is None or self.converter is None:
+            await self.initialize()
+        data_from_resource = await self.file_service.get_lines(path, key)
+        validated_data = await self.validator.validate(data_from_resource)
+        return await self.converter.convert(validated_data)
 
     @classmethod
-    def create_processor(cls, factory_type: DataFactoryType) -> Self:
+    async def create_processor(cls, factory_type: DataFactoryType) -> 'DataProcessor':
         match factory_type:
             case factory_type.FROM_TXT:
                 return cls(FromTxtFileToCar())

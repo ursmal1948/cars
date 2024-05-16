@@ -96,7 +96,7 @@ class Car:
         return self.mileage > mileage_limit
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> Self:
+    async def from_dict(cls, data: dict[str, Any]) -> Self:
         """
         Creates a Car instance from a dictionary.
 

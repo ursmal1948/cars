@@ -6,10 +6,10 @@ from abc import ABC, abstractmethod
 
 
 @dataclass
-class Validator:
+class AsyncValidator:
     validation_functions: dict[str, Callable[[Any], bool]]
 
-    def validate_item(self, item_data: dict[str, Any]) -> dict[str, list[str]]:
+    async def validate_item(self, item_data: dict[str, Any]) -> dict[str, list[str]]:
         errors = {}
         for attr, func in self.validation_functions.items():
             if attr in item_data:
@@ -20,11 +20,11 @@ class Validator:
         return errors
 
     @abstractmethod
-    def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    async def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
         pass
 
 
-class CarsDataValidator(Validator):
+class CarsDataValidator(AsyncValidator):
 
     def __init__(self, model_regex: str, colors: list[str], price_min: int = 0) -> None:
         super().__init__({
@@ -55,5 +55,5 @@ class CarsDataValidator(Validator):
     def _validate_components(self, components: list[str]) -> bool:
         return all(re.match(self.model_regex, c) for c in components)
 
-    def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        return [car for car in data if len(self.validate_item(car)) == 0]
+    async def validate(self, data: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        return [car for car in data if len(await self.validate_item(car)) == 0]

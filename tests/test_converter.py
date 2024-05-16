@@ -1,6 +1,6 @@
 import pytest
 
-from cars.converter import CarsConverter
+from cars.converter import AsyncCarsConverter
 from cars.model import Car
 
 
@@ -16,7 +16,7 @@ class TestConverter:
              'components': ['EVASIVE STEERING']}]
 
     def test_car_converter(self, test_cars):
-        cars_converter = CarsConverter().convert(test_cars)
+        cars_converter = AsyncCarsConverter().convert(test_cars)
         assert cars_converter == [
             Car('AUDI', 900, 'SILVER', 1200, ['ABS', 'BLUETOOTH']),
             Car('BMW', 300, 'BLUE', 500, ['AIR CONDITIONING', 'CAMERA']),
