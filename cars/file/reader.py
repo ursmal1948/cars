@@ -14,8 +14,6 @@ class FileService(ABC):
 class JsonFileService(FileService):
     SUPPORTED_EXTENSIONS = '.json'
 
-    # Propagowanie wyjatkow.
-
     async def get_lines(self, path: str, key: str = None) -> list[dict[str, Any]]:
         async with aiofiles.open(path, 'r') as json_file:
             content = await json_file.read()
