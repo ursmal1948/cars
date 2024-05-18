@@ -42,6 +42,9 @@ By leveraging the abstract factory pattern, the project achieves scalability and
 Builder Pattern
 The builder pattern is employed to construct complex objects step by step. In this project, it is used to create Car instances. This creational pattern allows for more controlled and simpler object creation, enabling
 for customization of Car instances according to specific requirements or preferences. 
+
+## Asynchronos Data Processing Approach on branch async-feature
+DataProcessor is an asynchronous data processing utility designed to handle data conversion from TXT and JSON formats. Utilizing asynchronous processing, it offers efficient validation and conversion of car data, ensuring high-performance operations for diverse data sources
 ## Test Coverage
 The test coverage for this project has been assessed using both pytest and unittest frameworks. By implementing these testing frameworks, comprehensive tests have been developed to ensure the reliability and correctness of the functionalities. 
 
