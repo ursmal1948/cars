@@ -107,3 +107,42 @@ class Car:
             Car: An instance of Car created from the provided dictionary.
         """
         return cls(**data)
+
+
+class CarBuilder:
+    def __init__(self):
+        self._car_parameters = {
+            'model': 'BMW',
+            'price': 4000,
+            'color': 'BLACK',
+            'mileage': 2000,
+            'components': ['ABS', 'CAMERA']
+        }
+
+    def model(self, new_model: str) -> Self:
+        self._car_parameters['model'] = new_model
+        return self
+
+    def price(self, new_price: int) -> Self:
+        self._car_parameters['price'] = new_price
+        return self
+
+    def color(self, new_color: str) -> Self:
+        self._car_parameters['color'] = new_color
+        return self
+
+    def mileage(self, new_mileage: int) -> Self:
+        self._car_parameters['mileage'] = new_mileage
+        return self
+
+    def components(self, new_components: str | list[str]) -> Self:
+        components_list = [new_components] if isinstance(new_components, str) else new_components
+        self._car_parameters['components'] = components_list
+        return self
+
+    @classmethod
+    def builder(cls) -> Self:
+        return cls()
+
+    def build(self) -> Car:
+        return Car(**self._car_parameters)
