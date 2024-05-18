@@ -2,8 +2,10 @@ from cars.model import Car
 from cars.file.service import FromTxtFileToCar, FromJsonFileToCar, DataProcessor, DataFactoryType
 from cars.file.reader import TxtFileService, JsonFileService
 from cars.validator import CarsDataValidator
-from cars.converter import AsyncCarsConverter
+from cars.converter import CarsConverter
 import unittest
+import pytest
+import asyncio
 
 
 class TestDataFactoryFromTxtFileToCar(unittest.TestCase):
@@ -23,7 +25,7 @@ class TestDataFactoryFromTxtFileToCar(unittest.TestCase):
 
     def test_create_converter(self):
         converter = self.factory.create_converter()
-        self.assertIsInstance(converter, AsyncCarsConverter)
+        self.assertIsInstance(converter, CarsConverter)
 
 
 class TestDataFactoryFromJsonFileToCar(unittest.TestCase):
@@ -43,23 +45,25 @@ class TestDataFactoryFromJsonFileToCar(unittest.TestCase):
 
     def test_create_converter(self):
         converter = self.factory.create_converter()
-        self.assertIsInstance(converter, AsyncCarsConverter)
+        self.assertIsInstance(converter, CarsConverter)
 
 
 class TestDataProcessorProcess:
-    def test_text_data_processor(self, txt_path_correct_data):
+    @pytest.mark.asyncio
+    async def test_text_data_processor(self, txt_path_correct_data):
         txt_data_factory = FromTxtFileToCar()
         processor = DataProcessor(txt_data_factory)
-        cars = processor.process(txt_path_correct_data, None)
+        cars = await processor.process(txt_path_correct_data, None)
         assert cars == [
             Car(model='BMW', price=2000, color='BLUE', mileage=1500, components=['BLUETOOTH', 'ABS']),
             Car(model='OPEL', price=1000, color='SILVER', mileage=2000, components=['CAMERA', 'ABS'])
         ]
 
-    def test_json_data_processor(self, json_path_correct_data):
+    @pytest.mark.asyncio
+    async def test_json_data_processor(self, json_path_correct_data):
         json_data_factory = FromJsonFileToCar()
         processor = DataProcessor(json_data_factory)
-        cars = processor.process(json_path_correct_data, 'cars')
+        cars = await processor.process(json_path_correct_data, 'cars')
 
         assert cars == [
             Car(model='AUDI', price=9000, color='SILVER', mileage=1500, components=['CAMERA']),
@@ -69,15 +73,16 @@ class TestDataProcessorProcess:
 
 
 class TestDataProcessorCreateProcessor(unittest.TestCase):
-
-    def test_create_from_txt_factory(self):
-        processor = DataProcessor.create_processor(DataFactoryType.FROM_TXT)
+    @pytest.mark.asyncio
+    async def test_create_from_txt_factory(self):
+        processor = await DataProcessor.create_processor(DataFactoryType.FROM_TXT)
         self.assertIsInstance(processor.file_service, TxtFileService)
         self.assertIsInstance(processor.validator, CarsDataValidator)
-        self.assertIsInstance(processor.converter, AsyncCarsConverter)
+        self.assertIsInstance(processor.converter, CarsConverter)
 
-    def test_create_from_json_factory(self):
-        processor = DataProcessor.create_processor(DataFactoryType.FROM_JSON)
+    @pytest.mark.asyncio
+    async def test_create_from_json_factory(self):
+        processor = await DataProcessor.create_processor(DataFactoryType.FROM_JSON)
         self.assertIsInstance(processor.file_service, JsonFileService)
         self.assertIsInstance(processor.validator, CarsDataValidator)
-        self.assertIsInstance(processor.converter, AsyncCarsConverter)
+        self.assertIsInstance(processor.converter, CarsConverter)

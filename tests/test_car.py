@@ -1,4 +1,6 @@
 from cars.model import Car
+import asyncio
+import pytest
 
 
 class TestCarModel:
@@ -30,13 +32,13 @@ class TestCarModel:
 
 
 class TestCarFromDict:
-
-    def test(self, test_car_example):
+    @pytest.mark.asyncio
+    async def test(self, test_car_example):
         data = {
             "model": "HONDA",
             "price": 200,
             "color": "BLUE",
             "mileage": 200,
             "components": ["ABS", "AIR CONDITIONING"]}
-        actual_car = Car.from_dict(data)
+        actual_car = await  Car.from_dict(data)
         assert actual_car == test_car_example

@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 
 
 @dataclass
-class AsyncValidator:
+class Validator:
     validation_functions: dict[str, Callable[[Any], bool]]
 
     async def validate_item(self, item_data: dict[str, Any]) -> dict[str, list[str]]:
@@ -24,7 +24,7 @@ class AsyncValidator:
         pass
 
 
-class CarsDataValidator(AsyncValidator):
+class CarsDataValidator(Validator):
 
     def __init__(self, model_regex: str, colors: list[str], price_min: int = 0) -> None:
         super().__init__({

@@ -1,6 +1,6 @@
 import pytest
 
-from cars.converter import AsyncCarsConverter
+from cars.converter import CarsConverter
 from cars.model import Car
 
 
@@ -15,8 +15,9 @@ class TestConverter:
             {'model': 'OPEL', 'price': 5000, 'color': 'WHITE', 'mileage': 700,
              'components': ['EVASIVE STEERING']}]
 
-    def test_car_converter(self, test_cars):
-        cars_converter = AsyncCarsConverter().convert(test_cars)
+    @pytest.mark.asyncio
+    async def test_car_converter(self, test_cars):
+        cars_converter = await CarsConverter().convert(test_cars)
         assert cars_converter == [
             Car('AUDI', 900, 'SILVER', 1200, ['ABS', 'BLUETOOTH']),
             Car('BMW', 300, 'BLUE', 500, ['AIR CONDITIONING', 'CAMERA']),
