@@ -29,6 +29,8 @@ such as mileage limits or price ranges.
 Users can easily sort their car collections by specific attributes such as price, mileage, or model.
 - The Statistics service class calculates essential statistical information, such as the minimum, average, and maximum values, for a specified category of cars, such as price or mileage. Users can gain valuable insights into their car datasets.
 
+## Asynchronos Data Processing Approach on branch async-feature
+DataProcessor is an asynchronous data processing utility designed to handle data conversion from TXT and JSON formats. Utilizing asynchronous processing, it offers efficient validation and conversion of car data, ensuring high-performance operations for diverse data sources.
 ## Test Coverage
 The test coverage for this project has been assessed using both pytest and unittest frameworks. By implementing these testing frameworks, comprehensive tests have been developed to ensure the reliability and correctness of the functionalities. 
 
