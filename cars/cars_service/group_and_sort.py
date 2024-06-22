@@ -1,6 +1,8 @@
 from collections import defaultdict, Counter
 from cars.model import Car
 from .service import CarsService
+from typing import Callable
+from functools import cmp_to_key
 
 
 class GroupAndSortService(CarsService):
@@ -17,10 +19,13 @@ class GroupAndSortService(CarsService):
         else:
             return 1
 
-    def sort_by(self, sorting_key: str) -> list[Car]:
+    def sort_cars(self, sort_fn: Callable[[Car, Car], int], reverse: bool = False) -> list[Car]:
+        return sorted(self.cars, key=cmp_to_key(sort_fn), reverse=reverse)
+
+    def sort_by(self, sorting_key: str, rev: bool = False) -> list[Car]:
         if not all(hasattr(car, sorting_key) for car in self.cars):
             raise AttributeError('Incorrect key')
-        return self.sort_cars(lambda car1, car2: self.compare_cars(car1, car2, sorting_key))
+        return self.sort_cars(lambda car1, car2: self.compare_cars(car1, car2, sorting_key), rev)
 
     def group_by_color(self) -> dict[str, int]:
         """
